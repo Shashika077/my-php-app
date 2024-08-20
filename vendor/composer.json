@@ -1,0 +1,9 @@
+{
+    "name": "your-vendor/web",
+    "description": "A description of your web project.",
+    "require": {
+      "vlucas/phpdotenv": "^5.4",
+      "firebase/php-jwt": "^6.0"
+    }
+  }
+  
