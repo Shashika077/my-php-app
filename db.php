@@ -19,6 +19,11 @@ if ($mysqli->connect_errno) {
 // Set SSL options
 $mysqli->ssl_set(null, null, $ssl_ca, null, null);
 
+// Reconnect with SSL enabled
+if (!$mysqli->real_connect($host, $username, $password, $database, $port, null, MYSQLI_CLIENT_SSL)) {
+    die("Failed to connect to MySQL with SSL: " . $mysqli->connect_error);
+}
+
 // Verify if SSL is enabled
 $result = $mysqli->query("SHOW VARIABLES LIKE 'have_ssl'");
 if ($result) {
