@@ -1,5 +1,4 @@
-<?php
-// Database connection details
+
 $host = 'we-server.mysql.database.azure.com';
 $port = 3306;
 $username = 'creuugqssa';
@@ -7,7 +6,7 @@ $password = 'ZfiK0QRaD6$b7eii';
 $database = 'web';
 
 // Path to your SSL certificate
-$ssl_ca = 'C:/xampp/htdocs/Web/Backend/certs/ca-cert.pem'; // Adjust path as needed
+$ssl_ca = '/home/site/wwwroot/certs/ca-cert.pem'; // Adjust path as needed
 
 // Create a new MySQLi connection
 $mysqli = new mysqli($host, $username, $password, $database, $port);
@@ -38,4 +37,3 @@ if ($result) {
 
 // Close the connection
 $mysqli->close();
-?>
