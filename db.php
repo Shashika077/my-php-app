@@ -1,4 +1,4 @@
-
+<?php
 $host = 'we-server.mysql.database.azure.com';
 $port = 3306;
 $username = 'creuugqssa';
@@ -8,10 +8,10 @@ $database = 'web';
 // Path to your SSL certificate
 $ssl_ca = '/home/site/wwwroot/certs/ca-cert.pem'; // Adjust path as needed
 
-// Create a new MySQLi connection
+// Create a new MySQLi connection with SSL options
 $mysqli = new mysqli($host, $username, $password, $database, $port);
 
-// Check connection
+// Check if the connection was successful
 if ($mysqli->connect_errno) {
     die("Failed to connect to MySQL: " . $mysqli->connect_error);
 }
@@ -21,9 +21,13 @@ $mysqli->ssl_set(null, null, $ssl_ca, null, null);
 
 // Verify if SSL is enabled
 $result = $mysqli->query("SHOW VARIABLES LIKE 'have_ssl'");
-$row = $result->fetch_assoc();
-if ($row['Value'] != 'YES') {
-    die("SSL is not enabled on the MySQL connection.");
+if ($result) {
+    $row = $result->fetch_assoc();
+    if ($row['Value'] != 'YES') {
+        die("SSL is not enabled on the MySQL connection.");
+    }
+} else {
+    die("Failed to check SSL status: " . $mysqli->error);
 }
 
 // Perform a test query
@@ -37,3 +41,4 @@ if ($result) {
 
 // Close the connection
 $mysqli->close();
+?>
