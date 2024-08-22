@@ -1,8 +1,4 @@
 <?php
-require 'vendor/autoload.php'; // Composer autoload
-use \Firebase\JWT\JWT;
-use Dotenv\Dotenv;
-
 // CORS headers
 header("Access-Control-Allow-Origin: *"); 
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); 
@@ -11,10 +7,6 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit(0);
 }
-
-// Load environment variables
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 
 // Include database connection
 include 'db.php'; 
@@ -75,15 +67,7 @@ try {
     }
 
     if ($stmt->execute()) {
-        $key = $_ENV['JWT_SECRET_KEY'];
-        $payload = [
-            'email' => $email,
-            'exp' => time() + 3600 // Token expires in 1 hour
-        ];
-
-        $token = JWT::encode($payload, $key, 'HS256');
-
-        echo json_encode(['status' => 'success', 'message' => 'Registration successful : Please wait until you receive approval.', 'token' => $token]);
+        echo json_encode(['status' => 'success', 'message' => 'Registration successful: Please wait until you receive approval.']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Registration failed.']);
     }
