@@ -1,6 +1,6 @@
 <?php
 // CORS headers
-header('Access-Control-Allow-Origin: http://localhost:3001');
+header('Access-Control-Allow-Origin: https://webdev2-def75.web.app');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
