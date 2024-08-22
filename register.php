@@ -58,7 +58,7 @@ try {
         $message = 'Registration successful.';
     } elseif ($name === 'employer') {
         // User (Employee) registration
-        $stmt = $mysqli->prepare("INSERT INTO users (email, password, name) VALUES (?, ?, ?)");
+        $stmt = $mysqli->prepare("INSERT INTO requests (email, password, name) VALUES (?, ?, ?)");
         if ($stmt === false) {
             throw new Exception('Prepare failed: ' . $mysqli->error);
         }
