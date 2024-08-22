@@ -3,6 +3,7 @@
 header('Access-Control-Allow-Origin: https://webdev2-def75.web.app');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Content-Type: application/json'); // Ensure the response is JSON
 
 // Database connection details
 $host = 'we-server.mysql.database.azure.com';
@@ -21,7 +22,8 @@ $mysqli->real_connect($host, $username, $password, $database, $port, null, MYSQL
 
 // Check if the connection was successful
 if ($mysqli->connect_errno) {
-    die(json_encode(['status' => 'error', 'message' => 'Failed to connect to MySQL: ' . $mysqli->connect_error]));
+    echo json_encode(['status' => 'error', 'message' => 'Failed to connect to MySQL: ' . $mysqli->connect_error]);
+    exit();
 }
 
 // Handle JSON POST requests
