@@ -5,15 +5,18 @@ header('Access-Control-Allow-Methods: POST'); // Allow POST requests
 header('Access-Control-Allow-Headers: Content-Type, Authorization'); // Allow specific headers
 
 // Database configuration
-$host = 'localhost';
+$host = 'we-server.mysql.database.azure.com';
 $dbname = 'web';
-$username = 'root';
-$password = '';
+$username = 'creuugqssa';
+$password = 'ZfiK0QRaD6$b7eii';
+$ssl_ca = '/home/site/wwwroot/certs/ca-cert.pem'; // Path to SSL certificate
 
 // Create a database connection
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password, [
+        PDO::MYSQL_ATTR_SSL_CA => $ssl_ca,
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Database connection failed: ' . $e->getMessage()]);
     exit;
@@ -44,10 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $quantity = $_POST['quantity'];
 
     // Handle image upload
-    $image = $_FILES['image']; // Define the $image variable
-    $uploadDir = 'uploads/'; // Make sure this directory exists and is writable
-    $uploadFile = $uploadDir . basename($image['name']); // Define the $uploadFile variable
-    
+    $image = $_FILES['image'];
+    $uploadDir = 'uploads/';
+    $uploadFile = $uploadDir . basename($image['name']);
+
     // Check if upload directory exists
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true); // Create directory if it does not exist
