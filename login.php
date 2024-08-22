@@ -1,18 +1,15 @@
 <?php
 require 'vendor/autoload.php'; // Composer autoload
-use \Firebase\JWT\JWT;
-use Dotenv\Dotenv;
 
 // CORS headers
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+// Include database connection
+include 'db.php'; // Ensure this file properly sets up $conn or $mysqli
 
-include 'db.php';
-
+// Handle JSON POST requests
 $data = json_decode(file_get_contents('php://input'), true);
 
 $email = $data['email'] ?? '';
@@ -49,17 +46,9 @@ try {
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
 
-    // Verify the password and generate JWT token
+    // Verify the password
     if ($user && password_verify($password, $user['password'])) {
-        $key = $_ENV['JWT_SECRET_KEY'];
-        $payload = [
-            'email' => $email,
-            'name2' => $name2,
-            'exp' => time() + 3600 // Token expires in 1 hour
-        ];
-        $token = JWT::encode($payload, $key, 'HS256');
-
-        echo json_encode(['status' => 'success', 'message' => 'Login successful.', 'token' => $token]);
+        echo json_encode(['status' => 'success', 'message' => 'Login successful.']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Invalid credentials.']);
     }
@@ -67,6 +56,9 @@ try {
     echo json_encode(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()]);
 }
 
-$stmt->close();
+// Close the statement and connection
+if ($stmt) {
+    $stmt->close();
+}
 $conn->close();
 ?>
