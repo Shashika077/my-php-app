@@ -1,10 +1,9 @@
 <?php
 // CORS headers
 header('Content-Type: application/json');
-
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow POST and other methods
-header('Access-Control-Allow-Headers: Content-Type'); // Allow Content-Type header
-
+header('Access-Control-Allow-Origin: https://webdev-e5f44.web.app'); // Adjust to your frontend origin
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow GET, POST, and OPTIONS methods
+header('Access-Control-Allow-Headers: Content-Type, Authorization'); // Allow Content-Type and Authorization headers
 
 // Handle preflight request
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
