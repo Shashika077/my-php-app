@@ -41,6 +41,7 @@ if (empty($email) || empty($password) || empty($name)) {
 
 try {
     $stmt = null;
+    $message = '';
 
     if ($name === 'admin') {
         // Admin registration
@@ -54,6 +55,7 @@ try {
             throw new Exception('Prepare failed: ' . $mysqli->error);
         }
         $stmt->bind_param("ssss", $email, password_hash($password, PASSWORD_BCRYPT), $name, $secretKey);
+        $message = 'Registration successful.';
     } elseif ($name === 'employer') {
         // User (Employee) registration
         $stmt = $mysqli->prepare("INSERT INTO users (email, password, name) VALUES (?, ?, ?)");
@@ -61,6 +63,7 @@ try {
             throw new Exception('Prepare failed: ' . $mysqli->error);
         }
         $stmt->bind_param("sss", $email, password_hash($password, PASSWORD_BCRYPT), $name2);
+        $message = 'Registration successful. Please wait for your approval.';
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Invalid user type.']);
         $mysqli->close();
@@ -68,7 +71,7 @@ try {
     }
 
     if ($stmt->execute()) {
-        echo json_encode(['status' => 'success', 'message' => 'Registration successful.']);
+        echo json_encode(['status' => 'success', 'message' => $message]);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Registration failed: ' . $stmt->error]);
     }
