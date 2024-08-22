@@ -1,37 +1,41 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Database connection details
+$host = 'we-server.mysql.database.azure.com';
+$port = 3306;
+$username = 'creuugqssa';
+$password = 'ZfiK0QRaD6$b7eii';
+$database = 'web';
 
-$servername = "we-server.mysql.database.azure.com";
-$username = "creuugqssa";
-$password = "ZfiK0QRaD6$b7eii";
-$dbname = "web";
+// Path to your SSL certificate
+$ssl_ca = '/home/site/wwwroot/ca-cert.pem'; // Adjust this path as needed
 
-// Path to CA certificate
-$ssl_ca_path = '/path/to/DigiCertGlobalRootCA.crt.pem';
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname, 3306, $ssl_ca_path);
+// Create a new MySQLi connection
+$mysqli = new mysqli($host, $username, $password, $database, $port);
 
 // Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if ($mysqli->connect_errno) {
+    die("Failed to connect to MySQL: " . $mysqli->connect_error);
 }
 
-echo "Connected successfully.<br>";
+// Set SSL options
+$mysqli->ssl_set(null, null, $ssl_ca, null, null);
 
-// Run a test query
-$sql = "SHOW TABLES";
-$result = $conn->query($sql);
+// Verify if SSL is enabled
+$result = $mysqli->query("SHOW VARIABLES LIKE 'have_ssl'");
+$row = $result->fetch_assoc();
+if ($row['Value'] != 'YES') {
+    die("SSL is not enabled on the MySQL connection.");
+}
 
-if ($result->num_rows > 0) {
-    echo "Tables in the database:<br>";
-    while ($row = $result->fetch_assoc()) {
-        echo $row["Tables_in_web"] . "<br>";
-    }
+// Perform a test query
+$result = $mysqli->query("SELECT NOW() AS now");
+if ($result) {
+    $row = $result->fetch_assoc();
+    echo "Current time: " . $row['now'];
 } else {
-    echo "No tables found in the database.";
+    die("Query failed: " . $mysqli->error);
 }
 
-$conn->close();
+// Close the connection
+$mysqli->close();
 ?>
