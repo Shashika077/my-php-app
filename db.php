@@ -9,19 +9,13 @@ $database = 'web';
 $ssl_ca = '/home/site/wwwroot/certs/ca-cert.pem'; // Adjust path as needed
 
 // Create a new MySQLi connection with SSL options
-$mysqli = new mysqli($host, $username, $password, $database, $port);
+$mysqli = new mysqli();
+$mysqli->ssl_set(null, null, $ssl_ca, null, null); // Set SSL options
+$mysqli->real_connect($host, $username, $password, $database, $port, null, MYSQLI_CLIENT_SSL);
 
 // Check if the connection was successful
 if ($mysqli->connect_errno) {
     die("Failed to connect to MySQL: " . $mysqli->connect_error);
-}
-
-// Set SSL options
-$mysqli->ssl_set(null, null, $ssl_ca, null, null);
-
-// Reconnect with SSL enabled
-if (!$mysqli->real_connect($host, $username, $password, $database, $port, null, MYSQLI_CLIENT_SSL)) {
-    die("Failed to connect to MySQL with SSL: " . $mysqli->connect_error);
 }
 
 // Verify if SSL is enabled
