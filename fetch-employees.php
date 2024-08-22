@@ -4,8 +4,19 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-// Include database connection
+// Load environment variables and database connection
+require 'vendor/autoload.php'; // Composer autoload
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 include 'db.php'; // Ensure this file contains the mysqli connection setup
+
+if (!$conn) {
+    echo json_encode(['status' => 'error', 'message' => 'Database connection is not initialized.']);
+    exit;
+}
 
 try {
     // Fetch all employees
