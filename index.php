@@ -1,6 +1,6 @@
 <?php
 // Include database connection
-include 'db.php';
+
 
 // Example of including other PHP files
 ?>
