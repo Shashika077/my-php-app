@@ -3,8 +3,6 @@
 include 'db.php';
 
 // Example of including other PHP files
-include 'register.php';
-include 'login.php';
 ?>
 
 <!DOCTYPE html>
