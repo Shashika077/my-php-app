@@ -1,7 +1,10 @@
 <?php
+require 'vendor/autoload.php'; // Composer autoload
+use \Firebase\JWT\JWT;
+
 // CORS headers
-header("Access-Control-Allow-Origin: *"); 
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
@@ -9,9 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 // Include database connection
-include 'db.php'; 
+include 'db.php'; // This should set up $mysqli
 
-if (!$conn) {
+if (!$mysqli) {
     echo json_encode(['status' => 'error', 'message' => 'Database connection is not initialized.']);
     exit;
 }
@@ -52,16 +55,16 @@ try {
             echo json_encode(['status' => 'error', 'message' => 'Invalid secret key. Admin account creation failed.']);
             exit;
         }
-        $stmt = $conn->prepare("INSERT INTO admins (email, password, name, secret_key) VALUES (?, ?, ?, ?)");
+        $stmt = $mysqli->prepare("INSERT INTO admins (email, password, name, secret_key) VALUES (?, ?, ?, ?)");
         if ($stmt === false) {
-            throw new Exception('Prepare failed: ' . $conn->error);
+            throw new Exception('Prepare failed: ' . $mysqli->error);
         }
         $stmt->bind_param("ssss", $email, $hashedPassword, $name, $secretKey);
     } else {
         // User (Employee) registration
-        $stmt = $conn->prepare("INSERT INTO requests (email, password, name) VALUES (?, ?, ?)");
+        $stmt = $mysqli->prepare("INSERT INTO requests (email, password, name) VALUES (?, ?, ?)");
         if ($stmt === false) {
-            throw new Exception('Prepare failed: ' . $conn->error);
+            throw new Exception('Prepare failed: ' . $mysqli->error);
         }
         $stmt->bind_param("sss", $email, $hashedPassword, $name2);
     }
@@ -77,5 +80,5 @@ try {
     echo json_encode(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()]);
 }
 
-$conn->close();
+$mysqli->close();
 ?>
