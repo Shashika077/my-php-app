@@ -5,17 +5,23 @@ header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
 // Database connection settings
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "web";
+$host = 'we-server.mysql.database.azure.com';
+$port = 3306;
+$username = 'creuugqssa';
+$password = 'ZfiK0QRaD6$b7eii';
+$dbname = 'web';
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+// Path to your SSL certificate
+$ssl_ca = '/home/site/wwwroot/certs/ca-cert.pem'; // Ensure this path is correct
+
+// Create connection with SSL
+$conn = new mysqli();
+$conn->ssl_set(null, null, $ssl_ca, null, null);
+$conn->real_connect($host, $username, $password, $dbname, $port, null, MYSQLI_CLIENT_SSL);
 
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die(json_encode(['status' => 'error', 'message' => 'Connection failed: ' . $conn->connect_error]));
 }
 
 // Function to execute SQL query and return result as JSON

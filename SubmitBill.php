@@ -1,16 +1,25 @@
 <?php
+header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "web";
+// Database connection settings
+$host = 'we-server.mysql.database.azure.com'; // Replace with your host
+$dbname = 'web';
+$username = 'creuugqssa'; // Replace with your username
+$password = 'ZfiK0QRaD6$b7eii'; // Replace with your password
+$ssl_ca = '/home/site/wwwroot/certs/ca-cert.pem'; // Path to your SSL certificate
 
 try {
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8mb4";
+    $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::MYSQL_ATTR_SSL_CA => $ssl_ca,
+    ];
+
+    $conn = new PDO($dsn, $username, $password, $options);
 
     // Decode JSON input
     $data = json_decode(file_get_contents("php://input"), true);

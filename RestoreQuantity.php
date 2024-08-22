@@ -12,15 +12,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 // Database configuration
-$host = 'localhost';
+$host = 'we-server.mysql.database.azure.com'; // Replace with your host
 $dbname = 'web';
-$username = 'root';
-$password = '';
+$username = 'creuugqssa'; // Replace with your username
+$password = 'ZfiK0QRaD6$b7eii'; // Replace with your password
+$ssl_ca = '/home/site/wwwroot/certs/ca-cert.pem'; // Path to your SSL certificate
 
 // Create a database connection
+$dsn = "mysql:host=$host;dbname=$dbname;charset=utf8mb4";
+$options = [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::MYSQL_ATTR_SSL_CA => $ssl_ca,
+];
+
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO($dsn, $username, $password, $options);
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Database connection failed: ' . $e->getMessage()]);
     exit;

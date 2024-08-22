@@ -1,4 +1,5 @@
 <?php
+// CORS headers
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: http://localhost:3000'); // Adjust to your frontend origin
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow POST and other methods
@@ -12,15 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 // Database configuration
-$host = 'localhost';
+$host = 'we-server.mysql.database.azure.com';
 $dbname = 'web';
-$username = 'root';
-$password = '';
+$username = 'creuugqssa';
+$password = 'ZfiK0QRaD6$b7eii';
+$ssl_ca = '/home/site/wwwroot/certs/ca-cert.pem'; // Path to SSL certificate
 
-// Create a database connection
+// Create a database connection with SSL options
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::MYSQL_ATTR_SSL_CA => $ssl_ca
+    ]);
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Database connection failed: ' . $e->getMessage()]);
     exit;

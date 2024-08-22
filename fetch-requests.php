@@ -4,14 +4,26 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-// Load environment variables and database connection
-require 'vendor/autoload.php'; // Composer autoload
-use Dotenv\Dotenv;
+// Database connection details
+$host = 'we-server.mysql.database.azure.com';
+$port = 3306;
+$username = 'creuugqssa';
+$password = 'ZfiK0QRaD6$b7eii';
+$database = 'web';
 
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+// Path to your SSL certificate
+$ssl_ca = '/home/site/wwwroot/certs/ca-cert.pem'; // Ensure this path is correct
 
-include 'db.php'; // Ensure this file contains the mysqli connection setup
+// Create a new MySQLi connection with SSL options
+$conn = new mysqli();
+$conn->ssl_set(null, null, $ssl_ca, null, null); // Set SSL options
+$conn->real_connect($host, $username, $password, $database, $port, null, MYSQLI_CLIENT_SSL);
+
+// Check if the connection was successful
+if ($conn->connect_errno) {
+    echo json_encode(['status' => 'error', 'message' => 'Database connection failed: ' . $conn->connect_error]);
+    exit;
+}
 
 // Fetch all pending requests
 $stmt = $conn->prepare("SELECT * FROM requests");
