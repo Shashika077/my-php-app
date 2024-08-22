@@ -34,18 +34,19 @@ try {
         foreach ($billItems as $item) {
             $productId = $item['id'];
             $quantity = $item['quantity'];
-            $price = $item['price'];
+            $sprice = $item['price']; // Selling price
+            $bprice = $item['bprice']; // Buying price
             $name = $item['name'];
-            $stotal = $price * $quantity;
-            $btotal = $stotal; // Assuming buying price is the same as selling price for this example
+            $stotal = $sprice * $quantity; // Total selling price for the item
+            $btotal = $bprice * $quantity; // Total buying price for the item
 
             // Insert into sells table
             $insertStmt = $conn->prepare("INSERT INTO sells (product_id, name, sprice, bprice, unit, stotal, btotal, date) 
                                          VALUES (:productId, :name, :sprice, :bprice, :quantity, :stotal, :btotal, CURDATE())");
             $insertStmt->bindParam(':productId', $productId);
             $insertStmt->bindParam(':name', $name);
-            $insertStmt->bindParam(':sprice', $price);
-            $insertStmt->bindParam(':bprice', $price); // Assuming buying price equals selling price
+            $insertStmt->bindParam(':sprice', $sprice);
+            $insertStmt->bindParam(':bprice', $bprice);
             $insertStmt->bindParam(':quantity', $quantity);
             $insertStmt->bindParam(':stotal', $stotal);
             $insertStmt->bindParam(':btotal', $btotal);
