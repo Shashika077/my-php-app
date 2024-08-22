@@ -1,10 +1,10 @@
 <?php
 // CORS headers
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: http://localhost:3000'); // Adjust to your frontend origin
+
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow POST and other methods
 header('Access-Control-Allow-Headers: Content-Type'); // Allow Content-Type header
-header('Access-Control-Max-Age: 3600'); // Cache preflight requests for 1 hour
+
 
 // Handle preflight request
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
