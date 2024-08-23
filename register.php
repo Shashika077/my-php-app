@@ -41,6 +41,13 @@ if (empty($email) || empty($password) || empty($password2) || empty($name)) {
     exit;
 }
 
+// Validate email format
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo json_encode(['status' => 'error', 'message' => 'Invalid email format.']);
+    $mysqli->close();
+    exit;
+}
+
 // Check if passwords match and validate password length
 if ($password !== $password2) {
     echo json_encode(['status' => 'error', 'message' => 'Passwords do not match.']);
@@ -50,6 +57,30 @@ if ($password !== $password2) {
 
 if (strlen($password) < 8) {
     echo json_encode(['status' => 'error', 'message' => 'Password must be at least 8 characters long.']);
+    $mysqli->close();
+    exit;
+}
+
+// Check if the email already exists
+$emailCheckQuery = ($name === 'admin') ? 
+    "SELECT COUNT(*) FROM admins WHERE email = ?" : 
+    "SELECT COUNT(*) FROM requests WHERE email = ?";
+
+$emailCheckStmt = $mysqli->prepare($emailCheckQuery);
+if ($emailCheckStmt === false) {
+    echo json_encode(['status' => 'error', 'message' => 'Prepare failed: ' . $mysqli->error]);
+    $mysqli->close();
+    exit;
+}
+
+$emailCheckStmt->bind_param('s', $email);
+$emailCheckStmt->execute();
+$emailCheckStmt->bind_result($emailCount);
+$emailCheckStmt->fetch();
+$emailCheckStmt->close();
+
+if ($emailCount > 0) {
+    echo json_encode(['status' => 'error', 'message' => 'Email already registered.']);
     $mysqli->close();
     exit;
 }
