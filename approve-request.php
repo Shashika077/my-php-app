@@ -1,6 +1,6 @@
 <?php
 // Handle CORS headers
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: https://webdev2-def75.web.app");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 

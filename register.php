@@ -29,12 +29,27 @@ $data = json_decode(file_get_contents('php://input'), true);
 
 $email = $data['email'] ?? '';
 $password = $data['password'] ?? '';
+$password2 = $data['password2'] ?? '';
 $name = $data['name'] ?? ''; 
 $name2 = $data['name2'] ?? ''; 
 $secretKey = $data['secretKey'] ?? ''; // Secret key for Admins
 
-if (empty($email) || empty($password) || empty($name)) {
-    echo json_encode(['status' => 'error', 'message' => 'Email, password, and user type are required.']);
+// Validate input fields
+if (empty($email) || empty($password) || empty($password2) || empty($name)) {
+    echo json_encode(['status' => 'error', 'message' => 'Email, password, password confirmation, and user type are required.']);
+    $mysqli->close();
+    exit;
+}
+
+// Check if passwords match and validate password length
+if ($password !== $password2) {
+    echo json_encode(['status' => 'error', 'message' => 'Passwords do not match.']);
+    $mysqli->close();
+    exit;
+}
+
+if (strlen($password) < 8) {
+    echo json_encode(['status' => 'error', 'message' => 'Password must be at least 8 characters long.']);
     $mysqli->close();
     exit;
 }
