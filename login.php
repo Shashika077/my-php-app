@@ -65,7 +65,13 @@ try {
 
     // Verify the password
     if ($user && password_verify($password, $user['password'])) {
-        echo json_encode(['status' => 'success', 'message' => 'Login successful.']);
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Login successful.',
+            'user' => [
+                'name2' => $user['name2'] // or 'name' if that's the correct field name
+            ]
+        ]);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Invalid credentials.']);
     }
