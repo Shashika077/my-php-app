@@ -30,7 +30,6 @@ $data = json_decode(file_get_contents('php://input'), true);
 $email = $data['email'] ?? '';
 $password = $data['password'] ?? '';
 $name = $data['name'] ?? ''; 
-$name2 = $data['name2'] ?? ''; 
 
 if (empty($email) || empty($password) || empty($name)) {
     echo json_encode(['status' => 'error', 'message' => 'Email, password, and user type are required.']);
@@ -69,7 +68,7 @@ try {
             'status' => 'success',
             'message' => 'Login successful.',
             'user' => [
-                'name2' => $user['name2'] // or 'name' if that's the correct field name
+                'name' => $user['name'] // Use 'name' field from users table
             ]
         ]);
     } else {
